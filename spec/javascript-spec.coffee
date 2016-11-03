@@ -600,67 +600,64 @@ describe "JavaScript grammar", ->
       expect(tokens[13]).toEqual value: '}', scopes: ['source.js', 'string.quoted.template.js', 'source.js.embedded.source', 'punctuation.section.embedded.js']
       expect(tokens[14]).toEqual value: '`', scopes: ['source.js', 'string.quoted.template.js', 'punctuation.definition.string.end.js']
 
-  describe "ES6 tagged HTML string templates", ->
-    it "tokenizes them as strings", ->
-      {tokens} = grammar.tokenizeLine('html`hey <b>${name}</b>`')
-      expect(tokens[0]).toEqual value: 'html', scopes: ['source.js', 'string.quoted.template.html.js', 'entity.name.function.js']
-      expect(tokens[1]).toEqual value: '`', scopes: ['source.js', 'string.quoted.template.html.js', 'punctuation.definition.string.begin.js']
-      expect(tokens[2]).toEqual value: 'hey <b>', scopes: ['source.js', 'string.quoted.template.html.js']
-      expect(tokens[3]).toEqual value: '${', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source', 'punctuation.section.embedded.js']
-      expect(tokens[4]).toEqual value: 'name', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source']
-      expect(tokens[5]).toEqual value: '}', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source', 'punctuation.section.embedded.js']
-      expect(tokens[6]).toEqual value: '</b>', scopes: ['source.js', 'string.quoted.template.html.js']
-      expect(tokens[7]).toEqual value: '`', scopes: ['source.js', 'string.quoted.template.html.js', 'punctuation.definition.string.end.js']
+  describe 'HTML strings', ->
+    beforeEach ->
+      waitsForPromise ->
+        atom.packages.activatePackage("language-html")
 
-  describe "innerHTML attribute declarations with string template tags", ->
-    it "tokenizes them as strings", ->
-      {tokens} = grammar.tokenizeLine('text.innerHTML = `hey <b>${name}</b>`')
-      expect(tokens[0]).toEqual value: 'text', scopes: ['source.js', 'variable.other.object.js']
-      expect(tokens[1]).toEqual value: '.', scopes: ['source.js', 'meta.delimiter.property.period.js']
-      expect(tokens[2]).toEqual value: 'innerHTML', scopes: ['source.js', 'variable.other.property.js']
-      expect(tokens[3]).toEqual value: ' ', scopes: ['source.js']
-      expect(tokens[4]).toEqual value: '=', scopes: ['source.js', 'keyword.operator.assignment.js']
-      expect(tokens[5]).toEqual value: ' ', scopes: ['source.js']
-      expect(tokens[6]).toEqual value: '`', scopes: ['source.js', 'string.quoted.template.html.js', 'punctuation.definition.string.begin.js']
-      expect(tokens[7]).toEqual value: 'hey <b>', scopes: ['source.js', 'string.quoted.template.html.js']
-      expect(tokens[8]).toEqual value: '${', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source', 'punctuation.section.embedded.js']
-      expect(tokens[9]).toEqual value: 'name', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source']
-      expect(tokens[10]).toEqual value: '}', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source', 'punctuation.section.embedded.js']
-      expect(tokens[11]).toEqual value: '</b>', scopes: ['source.js', 'string.quoted.template.html.js']
-      expect(tokens[12]).toEqual value: '`', scopes: ['source.js', 'string.quoted.template.html.js', 'punctuation.definition.string.end.js']
+    describe "ES6 tagged HTML string templates", ->
+      it "tokenizes them as strings", ->
+        {tokens} = grammar.tokenizeLine('html`hey <b>${name}</b>`')
+        expect(tokens[0]).toEqual value: 'html', scopes: [ 'source.js', 'string.quoted.template.html.js', 'entity.name.function.js' ]
+        expect(tokens[1]).toEqual value: '`', scopes: [ 'source.js', 'string.quoted.template.html.js', 'punctuation.definition.string.begin.js' ]
+        expect(tokens[2]).toEqual value: 'hey <b>', scopes: ['source.js', 'string.quoted.template.html.js']
+        expect(tokens[3]).toEqual value: '${', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source', 'punctuation.section.embedded.js']
+        expect(tokens[4]).toEqual value: 'name', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source']
+        expect(tokens[5]).toEqual value: '}', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source', 'punctuation.section.embedded.js']
+        expect(tokens[6]).toEqual value: '</b>', scopes: ['source.js', 'string.quoted.template.html.js']
+        expect(tokens[7]).toEqual value: '`', scopes: ['source.js', 'string.quoted.template.html.js', 'punctuation.definition.string.end.js']
 
-  describe "ES6 tagged HTML string templates with expanded function name", ->
-    it "tokenizes them as strings", ->
-      {tokens} = grammar.tokenizeLine('escapeHTML`hey <b>${name}</b>`')
-      expect(tokens[0]).toEqual value: 'escapeHTML', scopes: ['source.js', 'string.quoted.template.html.js', 'entity.name.function.js']
-      expect(tokens[1]).toEqual value: '`', scopes: ['source.js', 'string.quoted.template.html.js', 'punctuation.definition.string.begin.js']
-      expect(tokens[2]).toEqual value: 'hey <b>', scopes: ['source.js', 'string.quoted.template.html.js']
-      expect(tokens[3]).toEqual value: '${', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source', 'punctuation.section.embedded.js']
-      expect(tokens[4]).toEqual value: 'name', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source']
-      expect(tokens[5]).toEqual value: '}', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source', 'punctuation.section.embedded.js']
-      expect(tokens[6]).toEqual value: '</b>', scopes: ['source.js', 'string.quoted.template.html.js']
-      expect(tokens[7]).toEqual value: '`', scopes: ['source.js', 'string.quoted.template.html.js', 'punctuation.definition.string.end.js']
+    describe "innerHTML attribute declarations with string template tags", ->
+      it "tokenizes them as strings", ->
+        {tokens} = grammar.tokenizeLine('text.innerHTML = `hey <b>${name}</b>`')
+        expect(tokens[0]).toEqual value: 'text', scopes: [ 'source.js', 'variable.other.object.js' ]
+        expect(tokens[1]).toEqual value: '.', scopes: [ 'source.js', 'meta.delimiter.property.period.js' ]
+        expect(tokens[2]).toEqual value: 'innerHTML', scopes: [ 'source.js', 'variable.other.property.js' ]
+        expect(tokens[3]).toEqual value: ' ', scopes: [ 'source.js', 'string.quoted.template.html.js' ]
+        expect(tokens[4]).toEqual value: '=', scopes: [ 'source.js', 'string.quoted.template.html.js', 'keyword.operator.assignment.js' ]
+        expect(tokens[5]).toEqual value: ' ', scopes: [ 'source.js', 'string.quoted.template.html.js' ]
+        expect(tokens[6]).toEqual value: '`', scopes: [ 'source.js', 'string.quoted.template.html.js', 'punctuation.definition.string.begin.js' ]
+        expect(tokens[7]).toEqual value: 'hey <b>', scopes: ['source.js', 'string.quoted.template.html.js']
+        expect(tokens[8]).toEqual value: '${', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source', 'punctuation.section.embedded.js']
+        expect(tokens[9]).toEqual value: 'name', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source']
+        expect(tokens[10]).toEqual value: '}', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source', 'punctuation.section.embedded.js']
+        expect(tokens[11]).toEqual value: '</b>', scopes: ['source.js', 'string.quoted.template.html.js']
+        expect(tokens[12]).toEqual value: '`', scopes: ['source.js', 'string.quoted.template.html.js', 'punctuation.definition.string.end.js']
 
-  describe "ES6 tagged HTML string templates with expanded function name and white space", ->
-    it "tokenizes them as strings", ->
-      {tokens} = grammar.tokenizeLine('escapeHTML   `hey <b>${name}</b>`')
-      expect(tokens[0]).toEqual value: 'escapeHTML', scopes: ['source.js', 'string.quoted.template.html.js', 'entity.name.function.js']
-      expect(tokens[1]).toEqual value: '   ', scopes: ['source.js', 'string.quoted.template.html.js']
-      expect(tokens[2]).toEqual value: '`', scopes: ['source.js', 'string.quoted.template.html.js', 'punctuation.definition.string.begin.js']
-      expect(tokens[3]).toEqual value: 'hey <b>', scopes: ['source.js', 'string.quoted.template.html.js']
-      expect(tokens[4]).toEqual value: '${', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source', 'punctuation.section.embedded.js']
-      expect(tokens[5]).toEqual value: 'name', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source']
-      expect(tokens[6]).toEqual value: '}', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source', 'punctuation.section.embedded.js']
-      expect(tokens[7]).toEqual value: '</b>', scopes: ['source.js', 'string.quoted.template.html.js']
-      expect(tokens[8]).toEqual value: '`', scopes: ['source.js', 'string.quoted.template.html.js', 'punctuation.definition.string.end.js']
+    describe "ES6 tagged HTML string templates with expanded function name", ->
+      it "tokenizes them as strings", ->
+        {tokens} = grammar.tokenizeLine('escapeHTML`hey <b>${name}</b>`')
+        expect(tokens[0]).toEqual value: 'escapeHTML', scopes: [ 'source.js', 'string.quoted.template.html.js', 'entity.name.function.js' ]
+        expect(tokens[1]).toEqual value: '`', scopes: [ 'source.js', 'string.quoted.template.html.js', 'punctuation.definition.string.begin.js' ]
+        expect(tokens[2]).toEqual value: 'hey <b>', scopes: ['source.js', 'string.quoted.template.html.js']
+        expect(tokens[3]).toEqual value: '${', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source', 'punctuation.section.embedded.js']
+        expect(tokens[4]).toEqual value: 'name', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source']
+        expect(tokens[5]).toEqual value: '}', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source', 'punctuation.section.embedded.js']
+        expect(tokens[6]).toEqual value: '</b>', scopes: ['source.js', 'string.quoted.template.html.js']
+        expect(tokens[7]).toEqual value: '`', scopes: ['source.js', 'string.quoted.template.html.js', 'punctuation.definition.string.end.js']
 
-  describe "ES6 tagged Relay.QL string templates", ->
-    it "tokenizes them as strings", ->
-      {tokens} = grammar.tokenizeLine('Relay.QL`fragment on Foo { id }`')
-      expect(tokens[0]).toEqual value: 'Relay.QL', scopes: ['source.js', 'string.quoted.template.graphql.js', 'entity.name.function.js']
-      expect(tokens[1]).toEqual value: '`', scopes: ['source.js', 'string.quoted.template.graphql.js', 'punctuation.definition.string.begin.js']
-      expect(tokens[2]).toEqual value: 'fragment on Foo { id }', scopes: ['source.js', 'string.quoted.template.graphql.js']
-      expect(tokens[3]).toEqual value: '`', scopes: ['source.js', 'string.quoted.template.graphql.js', 'punctuation.definition.string.end.js']
+    describe "ES6 tagged HTML string templates with expanded function name and white space", ->
+      it "tokenizes them as strings", ->
+        {tokens} = grammar.tokenizeLine('escapeHTML   `hey <b>${name}</b>`')
+        expect(tokens[0]).toEqual value: 'escapeHTML', scopes: [ 'source.js', 'string.quoted.template.html.js', 'entity.name.function.js' ]
+        expect(tokens[1]).toEqual value: '   ', scopes: [ 'source.js', 'string.quoted.template.html.js' ]
+        expect(tokens[2]).toEqual value: '`', scopes: [ 'source.js', 'string.quoted.template.html.js', 'punctuation.definition.string.begin.js' ]
+        expect(tokens[3]).toEqual value: 'hey <b>', scopes: ['source.js', 'string.quoted.template.html.js']
+        expect(tokens[4]).toEqual value: '${', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source', 'punctuation.section.embedded.js']
+        expect(tokens[5]).toEqual value: 'name', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source']
+        expect(tokens[6]).toEqual value: '}', scopes: ['source.js', 'string.quoted.template.html.js', 'source.js.embedded.source', 'punctuation.section.embedded.js']
+        expect(tokens[7]).toEqual value: '</b>', scopes: ['source.js', 'string.quoted.template.html.js']
+        expect(tokens[8]).toEqual value: '`', scopes: ['source.js', 'string.quoted.template.html.js', 'punctuation.definition.string.end.js']
 
   describe "ES6 tagged Relay.QL string templates with interpolation", ->
     it "tokenizes them as strings", ->
